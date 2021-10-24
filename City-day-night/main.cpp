@@ -9,7 +9,9 @@ using namespace std;
 
 // ************ ALL GLOBAL VARIABLES *****************
 
+// both day and night initialized for day
 int night = 0;
+int day = 1;
 int road_height = 220;
 int bg_height = 70;
 int bg_mid = road_height + bg_height/2;
@@ -291,10 +293,30 @@ void carAnimation(){
     circle(x+car_length-padding_circle, y, 20);
 }
 
-float sun_x = 500;
-float sun_y = 600;
+// ****************** SUN SEGMENT ********************
+
+float sun_x = -45;
+float sun_y = 360;
+float sun_tx = 2;
+float sun_ty= 1;
 
 void sun(){
+
+    if((day && sun_x<500) || (!day && sun_x<1322)){
+        sun_x += sun_tx;
+
+        if(sun_x > 600){
+            sun_y -= sun_ty;
+        }
+        else{
+            sun_y += sun_ty;
+        }
+
+        if(sun_x > 1328){
+            sun_x = -45;
+            sun_y = 360;
+        }
+    }
 
     glColor3ub(0, 0, 0);
     circle(sun_x, sun_y, 41);
@@ -303,6 +325,58 @@ void sun(){
     circle(sun_x, sun_y, 40);
 }
 
+// ***************** SUN END ********************
+
+
+// ************ Lamp Post ***********************
+void lampPost(float x, float y){
+
+    float height = 80;
+    float width = 30;
+    float padding = width/8.0;
+
+
+    if(night){
+        glColor3ub(255, 255, 0);
+    }
+    else{
+        glColor3ub(130, 130, 0);
+    }
+
+    circle(x+width/2, y+height*2+width/2.0, 20);
+
+
+    if(night){
+        glColor3ub(20, 20, 20);
+    }
+    else{
+        glColor3ub(70, 70, 70);
+    }
+
+    glBegin(GL_POLYGON);
+        glVertex2f(x, y);
+        glVertex2f(x+width, y);
+        glVertex2f(x+width, y+height);
+        glVertex2f(x, y+height);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+        glVertex2f(x+padding, y+height);
+        glVertex2f(x+width-padding, y+height);
+        glVertex2f(x+width-padding, y+height*2.0);
+        glVertex2f(x+padding, y+height*2.0);
+    glEnd();
+
+}
+
+void bringLampPost(){
+    lampPost(250, road_height+10);
+    lampPost(510, road_height+10);
+    lampPost(825, road_height+10);
+    lampPost(1100, road_height+10);
+}
+
+// ****************** LAMP POST END *************
 
 
 // keyboard entry function
@@ -311,11 +385,15 @@ void my_keyboard(unsigned char key, int x, int y){
 	switch (key) {
 
 		case 'n':
-		    night = 1;
+		    day = 0;
 			break;
 
 		case 'd':
 		    night = 0;
+		    day = 1;
+            sun_x = -45;
+            sun_y = 360;
+
 			break;
 
 		case 's':
@@ -337,7 +415,11 @@ void drawShapes(void){
     road(road_height, night);
 
     bringAllBuilding();
+    bringLampPost();
 
+    if(sun_x>=1322){
+        night = 1;
+    }
 
     //glClearColor(0.0, 0.0, 0.0, 0.0);
     //glClear(GL_COLOR_BUFFER_BIT ) ;
