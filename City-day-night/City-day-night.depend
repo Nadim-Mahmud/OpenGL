@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1635085744 source:d:\workplace\git reps\opengl\city-day-night\main.cpp
+1635094364 source:d:\workplace\git reps\opengl\city-day-night\main.cpp
 	<windows.h>
 	<GL/glut.h>
 	<bits/stdc++.h>
