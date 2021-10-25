@@ -422,7 +422,7 @@ void moon(){
         }
     }
 
-    glColor3ub(255, 255, 0);
+    glColor3ub(255, 255, 153);
     circle(moon_x, moon_y, 40);
 
     glColor3ub(0, 0, 102);
