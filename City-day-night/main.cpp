@@ -16,6 +16,8 @@ int road_height = 220;
 int bg_height = 70;
 int bg_mid = road_height + bg_height/2;
 
+
+
 vector<int>random[20];
 void randomVectorGeneration(){
     for(int i=0; i<20; i++){
@@ -24,6 +26,8 @@ void randomVectorGeneration(){
         }
     }
 }
+
+
 
 
 // *********************** BUILDIN SECTION *****************************
@@ -134,7 +138,7 @@ void bringAllBuilding(){
     houseBuilding(630, bg_mid, 200, 180, 5, 4, night,5);
 
     houseBuilding(900, bg_mid, 300, 160, 6, 3, night,6);
-    houseBuilding(970, bg_mid, 200, 180, 5, 4, night,7);
+    houseBuilding(980, bg_mid, 200, 180, 5, 4, night,7);
 }
 
 
@@ -246,6 +250,9 @@ void circle(int x, int y, int radious){
    glEnd();
 }
 
+// ******************** CAR START *********************
+
+// car - 1
 
 float counter = 0;
 float x = -250;
@@ -264,13 +271,17 @@ void carAnimation(){
 
     counter=counter+0.03;
     x = x+2;
-    if(x>1280) x = -40;
+    if(x>1280) x = -250; // re initiation car from start
     //cout<<x<<endl;
     //glTranslated(counter,y,0.0);
     //glScaled(0.1,0.1,0.0);
 
-    glColor3ub(1, 146, 189);
-    //glColor3ub(100, 106, 108);
+    if(night){
+        glColor3ub(1, 104, 107);
+    }
+    else{
+        glColor3ub(1, 146, 189);
+    }
 
     glBegin(GL_POLYGON);
         glVertex2f(x, y);
@@ -293,6 +304,62 @@ void carAnimation(){
     circle(x+car_length-padding_circle, y, 20);
 }
 
+// car - 2
+
+float counter2 = 0;
+float x2 = x-700;
+float y2 = 70;
+
+void carAnimation2(){
+
+    //Bottom Part
+    //glLoadIdentity();
+
+    float car_length = 250;
+    float car_width = 60;
+    float padding_top = car_length/4.0;
+    float padding_bottom = car_length/8.0;
+    float padding_circle = car_length/6.0;
+
+    counter=counter2+0.03;
+    x2 = x2+2;
+    if(x2>1280) x2 = x-700; // re initiation car from start
+    //cout<<x<<endl;
+    //glTranslated(counter,y,0.0);
+    //glScaled(0.1,0.1,0.0);
+
+    if(night){
+        glColor3ub(120, 0, 0);
+    }
+    else{
+        glColor3ub(170, 0, 0);
+    }
+
+    glBegin(GL_POLYGON);
+        glVertex2f(x2, y2);
+        glVertex2f(x2+car_length, y2);
+        glVertex2f(x2+car_length, y2+car_width);
+        glVertex2f(x2, y2+car_width);
+    glEnd();
+
+     //Top Part
+    glBegin(GL_POLYGON);
+        glVertex2f(x2+padding_bottom, y2+car_width);
+        glVertex2f(x2+car_length-padding_bottom, y2+car_width);
+        glVertex2f(x2+car_length-padding_top, y2+car_width+car_width/2.0);
+        glVertex2f(x2+padding_top, y2+car_width+car_width/2.0);
+
+    glEnd();
+
+    glColor3ub(0, 0, 0);
+    circle(x2+padding_circle, y2, 20);
+    circle(x2+car_length-padding_circle, y2, 20);
+}
+
+
+// *********************** CAR END **************************
+
+
 // ****************** SUN SEGMENT ********************
 
 float sun_x = -45;
@@ -302,7 +369,7 @@ float sun_ty= 1;
 
 void sun(){
 
-    if((day && sun_x<500) || (!day && sun_x<1322)){
+    if((day && sun_x<500&&!night) || (!day && sun_x<1322&&!night)){
         sun_x += sun_tx;
 
         if(sun_x > 600){
@@ -325,7 +392,46 @@ void sun(){
     circle(sun_x, sun_y, 40);
 }
 
+
 // ***************** SUN END ********************
+
+
+// ****************** MOON SEGMENT ********************
+
+float moon_x = -45;
+float moon_y = 360;
+float moon_tx = 2;
+float moon_ty= 1;
+float moon_mr = 0;
+
+void moon(){
+
+    if((night && moon_x<500) || (moon_mr && moon_x<1322)){
+        moon_x += moon_tx;
+
+        if(moon_x > 600){
+            moon_y -= moon_ty;
+        }
+        else{
+            moon_y += moon_ty;
+        }
+
+        if(moon_x > 1328){
+            moon_x = -45;
+            moon_y = 360;
+        }
+    }
+
+    glColor3ub(255, 255, 0);
+    circle(moon_x, moon_y, 40);
+
+    glColor3ub(0, 0, 102);
+    circle(moon_x+20, moon_y+20, 40);
+}
+
+// ***************** MOON END ********************
+
+
 
 
 // ************ Lamp Post ***********************
@@ -386,10 +492,13 @@ void my_keyboard(unsigned char key, int x, int y){
 
 		case 'n':
 		    day = 0;
+		    moon_x = -45;
+            moon_y = 360;
+
 			break;
 
 		case 'd':
-		    night = 0;
+		    moon_mr = 1;
 		    day = 1;
             sun_x = -45;
             sun_y = 360;
@@ -411,14 +520,20 @@ void drawShapes(void){
 
 	sky(road_height + bg_height, night);
 	sun();
+	moon();
     back_ground(road_height, bg_height, night);
     road(road_height, night);
 
     bringAllBuilding();
     bringLampPost();
 
+    // night after sunset
     if(sun_x>=1322){
         night = 1;
+    }
+    if(moon_x > 1322){
+        moon_mr = 0;
+        night = 0;
     }
 
     //glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -429,6 +544,7 @@ void drawShapes(void){
     //circle(100,100,50);
 
     carAnimation();
+    carAnimation2();
 
     Sleep(1000/60);
     glutSwapBuffers();
