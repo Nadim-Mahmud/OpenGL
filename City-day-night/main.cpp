@@ -406,7 +406,7 @@ float moon_mr = 0;
 
 void moon(){
 
-    if((night && moon_x<500) || (moon_mr && moon_x<1322)){
+    if((night && moon_x<750) || (moon_mr && moon_x<1322)){
         moon_x += moon_tx;
 
         if(moon_x > 600){
@@ -491,23 +491,29 @@ void my_keyboard(unsigned char key, int x, int y){
 	switch (key) {
 
 		case 'n':
-		    day = 0;
-		    moon_x = -45;
-            moon_y = 360;
-
+		    if(!night){
+                day = 0;
+                moon_x = -45;
+                moon_y = 360;
+		    }
 			break;
 
 		case 'd':
-		    moon_mr = 1;
-		    day = 1;
-            sun_x = -45;
-            sun_y = 360;
-
+		    if(night){
+                moon_mr = 1;
+                day = 1;
+                sun_x = -45;
+                sun_y = 360;
+		    }
 			break;
 
 		case 's':
 			 //glutIdleFunc(NULL);
-			 break;
+            break;
+
+        case 'f':
+			 //glutIdleFunc(NULL);
+            break;
 
 	  default:
 			break;
@@ -518,9 +524,11 @@ void drawShapes(void){
 
 	glClear(GL_COLOR_BUFFER_BIT);	// Clear display window
 
+
 	sky(road_height + bg_height, night);
 	sun();
 	moon();
+
     back_ground(road_height, bg_height, night);
     road(road_height, night);
 
@@ -536,15 +544,16 @@ void drawShapes(void){
         night = 0;
     }
 
+    carAnimation();
+    carAnimation2();
+
+
     //glClearColor(0.0, 0.0, 0.0, 0.0);
     //glClear(GL_COLOR_BUFFER_BIT ) ;
 
 	//circle(640, 360, 50, 0);
 	//circle(670, 370, 50, 1);
     //circle(100,100,50);
-
-    carAnimation();
-    carAnimation2();
 
     Sleep(1000/60);
     glutSwapBuffers();
