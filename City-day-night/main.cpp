@@ -475,6 +475,80 @@ void lampPost(float x, float y){
 
 }
 
+// ********************** CLOUD SEGMENT ********************
+
+float cloud_x = -520;
+float cloud_y = 600;
+float cloud_tx = 2;
+float cloud_ty = 0;
+
+
+void cloud1(){
+
+    cloud_x += cloud_tx;
+    cloud_y += cloud_ty;
+
+    if(cloud_x>1380) cloud_x = -120;
+
+    float cloud_size = 50;
+    glColor3ub(0,0,0);
+    circle(cloud_x, cloud_y, cloud_size+1);
+    circle(cloud_x+30, cloud_y+20, cloud_size+1);
+    circle(cloud_x-30, cloud_y, cloud_size+1);
+    //circle(cloud_x, cloud_y-20, 61);
+
+    if(night){
+        glColor3ub(130, 130, 130);
+    }
+    else{
+        glColor3ub(255, 255, 255);
+        //glColor3ub(255, 255, 255);
+    }
+
+    circle(cloud_x, cloud_y, cloud_size);
+    circle(cloud_x+30, cloud_y+20, cloud_size);
+    circle(cloud_x-30, cloud_y, cloud_size);
+    //circle(cloud_x, cloud_y-20, 60);
+}
+
+float cloud2_x = -130;
+float cloud2_y = 560;
+float cloud2_tx = 2.5;
+float cloud2_ty = 0;
+
+
+void cloud2(){
+
+    cloud2_x += cloud2_tx;
+    cloud2_y += cloud2_ty;
+
+    if(cloud2_x>1380) cloud2_x = -120;
+
+    float cloud2_size = 50;
+    glColor3ub(0,0,0);
+    circle(cloud2_x, cloud2_y, cloud2_size+1);
+    circle(cloud2_x+30, cloud2_y+20, cloud2_size+1);
+    circle(cloud2_x-30, cloud2_y, cloud2_size+1);
+    //circle(cloud2_x, cloud2_y-20, 61);
+
+    if(night){
+        glColor3ub(130, 130, 130);
+    }
+    else{
+        glColor3ub(255, 255, 255);
+        //glColor3ub(255, 255, 255);
+    }
+
+    circle(cloud2_x, cloud2_y, cloud2_size);
+    circle(cloud2_x+30, cloud2_y+20, cloud2_size);
+    circle(cloud2_x-30, cloud2_y, cloud2_size);
+    //circle(cloud2_x, cloud2_y-20, 60);
+}
+
+
+// ********************** CLOUD END *************************
+
+
 void bringLampPost(){
     lampPost(250, road_height+10);
     lampPost(510, road_height+10);
@@ -526,8 +600,14 @@ void drawShapes(void){
 
 
 	sky(road_height + bg_height, night);
-	sun();
+
 	moon();
+
+	cloud1();
+
+	sun();
+
+	cloud2();
 
     back_ground(road_height, bg_height, night);
     road(road_height, night);
@@ -584,9 +664,11 @@ int main(int argc, char* argv[]){
 	glutInitWindowSize(1280, 720);					// Set window size
 	glutCreateWindow("Day and Night");	// Create display window
 	init();							// Execute initialisation procedure
+
 	glutDisplayFunc(drawShapes);		// Send graphics to display window
 	glutIdleFunc(drawShapes);
 	glutKeyboardFunc(my_keyboard);
+
 	glutMainLoop();					// Display everything and wait
 
 	return 0;

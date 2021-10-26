@@ -1,5 +1,5 @@
 # City Day and Night Shift
 
-## Control kays:
+## Control keys:
 	* n = transition to night
 	* d = transition to day 
