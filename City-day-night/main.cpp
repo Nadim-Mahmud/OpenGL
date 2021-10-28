@@ -602,11 +602,9 @@ void drawShapes(void){
 	sky(road_height + bg_height, night);
 
 	moon();
-
-	cloud1();
-
 	sun();
 
+	cloud1();
 	cloud2();
 
     back_ground(road_height, bg_height, night);
