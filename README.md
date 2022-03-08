@@ -1,2 +1,2 @@
 # OpenGL
-All OpenGL graphics project will be stored here
+City: Transfer day & night by pressig 'd' & 'n' key
